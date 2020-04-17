@@ -1,1 +1,2 @@
 from nepali_phone_number.nepali_phone_number import NepaliPhoneNumber
+from nepali_phone_number.nepali_phone_number import NepaliLandLineNumber
