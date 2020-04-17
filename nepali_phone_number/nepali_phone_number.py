@@ -1,10 +1,10 @@
-from config import config
-from datasets import nepali_english_digits
-from exceptions import InvalidEnglishNumberException, InvalidNepaliNumberException
-from validators import is_english_number, is_nepali_number
+from nepali_phone_number.config import config
+from nepali_phone_number.datasets import nepali_english_digits
+from nepali_phone_number.exceptions import InvalidEnglishNumberException, InvalidNepaliNumberException
+from nepali_phone_number.validators import is_english_number, is_nepali_number
 
-from exceptions import InvalidNumberException
-from regexs import (
+from nepali_phone_number.exceptions import InvalidNumberException
+from nepali_phone_number.regexs import (
     ncell_phone_number_regex,
     ntc_phone_number_regex,
     sky_phone_number_regex,

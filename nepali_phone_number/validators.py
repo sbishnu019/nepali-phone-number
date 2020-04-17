@@ -1,5 +1,5 @@
-from datasets import english_encodes, nepali_encodes
-from config import config
+from nepali_phone_number.datasets import english_encodes, nepali_encodes
+from nepali_phone_number.config import config
 
 
 def is_english_number(number: str):
