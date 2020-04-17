@@ -6,5 +6,9 @@ class InvalidEnglishNumberException(Exception):
     pass
 
 
-class InvalidNumberException(Exception):
+class InvalidPhoneNumberException(Exception):
+    pass
+
+
+class InvalidLandLineNumberException(Exception):
     pass

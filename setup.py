@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="nepali-phone-number",
-    version="0.0.1",
+    version="0.0.2",
     author="Bishnu Sharma",
     author_email="sbishnu019@gmail.com",
     description="A package for nepali mobile number",

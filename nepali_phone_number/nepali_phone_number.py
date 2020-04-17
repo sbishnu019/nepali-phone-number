@@ -1,9 +1,12 @@
 from nepali_phone_number.config import config
-from nepali_phone_number.datasets import nepali_english_digits
-from nepali_phone_number.exceptions import InvalidEnglishNumberException, InvalidNepaliNumberException
+from nepali_phone_number.datasets import nepali_english_digits, land_line_data
+from nepali_phone_number.exceptions import (
+    InvalidEnglishNumberException,
+    InvalidNepaliNumberException,
+    InvalidLandLineNumberException,
+    InvalidPhoneNumberException
+)
 from nepali_phone_number.validators import is_english_number, is_nepali_number
-
-from nepali_phone_number.exceptions import InvalidNumberException
 from nepali_phone_number.regexs import (
     ncell_phone_number_regex,
     ntc_phone_number_regex,
@@ -11,15 +14,13 @@ from nepali_phone_number.regexs import (
     utl_phone_number_regex,
     hello_phone_number_regex,
     smart_cell_phone_number_regex,
-    phone_number_regex
+    phone_number_regex,
+    land_line_number_regex,
+    kathmandu_land_line_number_regex
 )
 
 
-class NepaliPhoneNumber:
-    """
-    Class For Nepali Number
-    """
-
+class CommonClass:
     def __init__(self, nepali_number_input=None, english_number_input=None):
 
         if not nepali_number_input and not english_number_input:
@@ -67,28 +68,16 @@ class NepaliPhoneNumber:
         return converted_number
 
     def get_number_detail(self):
-        if self._english_number:
-            number = self._english_number
-        else:
-            number = self.convert_to_english()
-
-        return NumberDetail(number=number).get_detail()
+        raise NotImplementedError('get_number_detail() should be overridden.')
 
     def is_valid_number(self):
-        if self._english_number:
-            number = self._english_number
-        else:
-            number = self.convert_to_english()
+        raise NotImplementedError('is_valid_number() should be overridden.')
 
-        if phone_number_regex.match(number):
-            return True
-        return False
-        
-        
-class NumberDetail:
+
+class PhoneNumberDetail:
     def __init__(self, number: str):
         self._number = number
-    
+
     def get_detail(self):
         return {
             'number': self._number,
@@ -109,4 +98,74 @@ class NumberDetail:
         elif smart_cell_phone_number_regex.match(self._number):
             return 'SMART CELL'
         else:
-            raise InvalidNumberException('Invalid Phone Number.')
+            raise InvalidPhoneNumberException('Invalid Phone Number.')
+
+
+class LandLineNumberDetail:
+    def __init__(self, number: str):
+        self._number = number
+
+    def get_detail(self):
+        return {
+            'number': self._number,
+            'area': self._get_area()
+        }
+
+    def _get_area(self):
+        area_code = self._number[:3]
+        if area_code in land_line_data:
+            return land_line_data.get(area_code)
+        else:
+            area_code = self._number[:2]
+            if area_code in land_line_data:
+                return land_line_data.get(area_code)
+        raise InvalidLandLineNumberException('Invalid LandLine Number.')
+
+
+class NepaliPhoneNumber(CommonClass):
+    """
+    Class For Nepali Number
+    """
+    def get_number_detail(self):
+        if self._english_number:
+            number = self._english_number
+        else:
+            number = self.convert_to_english()
+        if self.is_valid_number():
+            return PhoneNumberDetail(number=number).get_detail()
+        raise InvalidPhoneNumberException('Invalid Phone Number.')
+
+    def is_valid_number(self):
+        if self._english_number:
+            number = self._english_number
+        else:
+            number = self.convert_to_english()
+
+        if phone_number_regex.match(number):
+            return True
+        return False
+
+
+class NepaliLandLineNumber(CommonClass):
+    def get_number_detail(self):
+        if self._english_number:
+            number = self._english_number
+        else:
+            number = self.convert_to_english()
+
+        if self.is_valid_number():
+            return LandLineNumberDetail(number=number).get_detail()
+        raise InvalidLandLineNumberException('Invalid LandLine Number.')
+
+    def is_valid_number(self):
+        if self._english_number:
+            number = self._english_number
+        else:
+            number = self.convert_to_english()
+
+        if kathmandu_land_line_number_regex.match(number):
+            return True
+        else:
+            if land_line_number_regex.match(number):
+                return True
+            return False
