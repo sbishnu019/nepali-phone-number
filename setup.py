@@ -12,7 +12,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/sbishnu019/nepali-phone-number",
-    download_url='https://github.com/sbishnu019/nepali-phone-number/archive/v0.0.2.tar.gz',
+    download_url='https://github.com/sbishnu019/nepali-phone-number/archive/v0.0.3.tar.gz',
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",

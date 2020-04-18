@@ -22,6 +22,9 @@ phone_number.convert_to_english()   # returns "9846511962"
 phone_number.is_valid_number()      # returns "True" for valid number and "False" for invalid number
 phone_number.get_number_detail()    # returns number detail eg. {'number': '9846511962', 'network_provider': 'NTC'}
 
+phone_number.get_number_detail()    # returns {'number': '9816154724', 'network_provider': 'NCELL', 'zone': 'Gandaki', 'sim_type': 'Prepaid'}
+                                    # in case of ncell number
+
 
 phone_number = NepaliPhoneNumber(english_number_input='9846511962')    # for english input
 phone_number.convert_to_nepali()    # returns "९८४६५११९६२"
