@@ -1,5 +1,7 @@
+import re
+
 from nepali_phone_number.config import config
-from nepali_phone_number.datasets import nepali_english_digits, land_line_data
+from nepali_phone_number.datasets import nepali_english_digits, land_line_data, ncell_data
 from nepali_phone_number.exceptions import (
     InvalidEnglishNumberException,
     InvalidNepaliNumberException,
@@ -79,9 +81,18 @@ class PhoneNumberDetail:
         self._number = number
 
     def get_detail(self):
+        network_provider = self._get_network_provider()
+        if network_provider == 'NCELL':
+            extra_data = self._get_ncell_data()
+            return {
+                'number': self._number,
+                'network_provider': network_provider,
+                'zone': extra_data['zone'],
+                'sim_type': extra_data['sim_type']
+            }
         return {
             'number': self._number,
-            'network_provider': self._get_network_provider()
+            'network_provider': network_provider
         }
 
     def _get_network_provider(self):
@@ -99,6 +110,45 @@ class PhoneNumberDetail:
             return 'SMART CELL'
         else:
             raise InvalidPhoneNumberException('Invalid Phone Number.')
+
+    def _get_ncell_data(self):
+        zone = ''
+        sim_type = ''
+        regexs = []
+
+        for d in ncell_data:
+            prepaid_code = ''
+            pro_code = ''
+
+            for code in d['prepaid']:
+                prepaid_code += code + '|'
+
+            for code in d['pro']:
+                pro_code += code + '|'
+
+            regexs.append(
+                {
+                    'zone': d['zone'],
+                    'prepaid_regex': re.compile('^({})\d+$'.format(prepaid_code.rstrip('|'))),
+                    'pro_regex': re.compile('^({})\d+$'.format(pro_code.rstrip('|')))
+                }
+            )
+
+        for regex in regexs:
+            if regex['pro_regex'].match(self._number):
+                zone = regex['zone']
+                sim_type = 'Pro'
+                break
+            else:
+                if regex['prepaid_regex'].match(self._number):
+                    zone = regex['zone']
+                    sim_type = 'Prepaid'
+                    break
+
+        return {
+            'zone': zone,
+            'sim_type': sim_type
+        }
 
 
 class LandLineNumberDetail:
