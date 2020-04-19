@@ -1,4 +1,8 @@
 # Nepali Phone Number
+[![Downloads](https://pepy.tech/badge/nepali-phone-number)](https://pepy.tech/project/nepali-phone-number)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/nepali-phone-number)]()
+[![PyPI](https://img.shields.io/pypi/v/nepali-phone-number)]()
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/nepali-phone-number)]()
 
 Nepali Phone Number is a Python library for dealing with nepali phone numbers with both nepali and english inputs.
 
